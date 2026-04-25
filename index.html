@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UNRELEASED">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>UNRELEASED</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111;
+  --bg3: #181818;
+  --bg4: #222;
+  --border: #2a2a2a;
+  --text: #f0f0f0;
+  --text2: #888;
+  --text3: #555;
+  --accent: #c8f55a;
+  --accent2: #ff4d6d;
+  --wish: #7b8cff;
+  --radius: 14px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.logo span { color: var(--text2); font-size: 0.65rem; display: block; letter-spacing: 0.2em; margin-top: -2px; }
+
+.add-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.add-btn:active { transform: scale(0.92); }
+
+/* Search */
+.search-wrap { position: relative; }
+.search-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: #444; }
+.search-input::placeholder { color: var(--text3); }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 1rem; pointer-events: none; }
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 14px 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans JP', sans-serif;
+  white-space: nowrap;
+}
+.tab.active { background: var(--accent); border-color: var(--accent); color: #000; }
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: flex;
+  gap: 10px;
+  padding: 14px 20px 0;
+}
+.stat-card {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.stat-label { font-size: 0.65rem; color: var(--text3); margin-top: 4px; letter-spacing: 0.08em; }
+
+/* ===== SECTION ===== */
+.section { padding: 16px 20px 0; }
+.section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* ===== ARTIST CHIPS ===== */
+.artist-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 14px 20px 0;
+}
+.artist-chip {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.artist-chip:active { transform: scale(0.95); }
+.artist-chip.selected { border-color: var(--accent); color: var(--accent); background: rgba(200,245,90,0.08); }
+
+/* ===== TRACK CARD ===== */
+.tracks-list { display: flex; flex-direction: column; gap: 8px; }
+
+.track-card {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.track-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.track-card.wish::before { background: var(--wish); opacity: 1; }
+.track-card.collected::before { background: var(--accent); opacity: 1; }
+.track-card:active { border-color: #444; }
+
+.track-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text3);
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.track-info { flex: 1; min-width: 0; }
+.track-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+.track-artist {
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-top: 2px;
+}
+.track-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.tag-wish { background: rgba(123,140,255,0.15); color: var(--wish); border: 1px solid rgba(123,140,255,0.3); }
+.tag-collected { background: rgba(200,245,90,0.1); color: var(--accent); border: 1px solid rgba(200,245,90,0.25); }
+.tag-year { background: var(--bg4); color: var(--text3); border: 1px solid var(--border); }
+
+.track-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.action-btn {
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.action-btn:active { transform: scale(0.9); }
+.action-btn.wish-active { background: rgba(123,140,255,0.2); border-color: var(--wish); }
+.action-btn.collect-active { background: rgba(200,245,90,0.15); border-color: var(--accent); }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text3);
+}
+.empty-state .emoji { font-size: 3rem; margin-bottom: 16px; }
+.empty-state p { font-size: 0.9rem; line-height: 1.6; }
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 10px 0 env(safe-area-inset-bottom, 10px);
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: all 0.15s;
+}
+.nav-icon { font-size: 1.3rem; }
+.nav-label { font-size: 0.6rem; font-weight: 700; color: var(--text3); letter-spacing: 0.05em; }
+.nav-item.active .nav-label { color: var(--accent); }
+.nav-item.active .nav-icon { filter: drop-shadow(0 0 6px var(--accent)); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 24px 24px 0 0;
+  padding: 20px 20px env(safe-area-inset-bottom, 20px);
+  width: 100%;
+  max-width: 480px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+.modal-title { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 0.7rem; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.form-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: #555; }
+.form-input::placeholder { color: var(--text3); }
+
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+
+.status-select { display: flex; gap: 8px; }
+.status-opt {
+  flex: 1;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.status-opt.active-collected { border-color: var(--accent); background: rgba(200,245,90,0.1); color: var(--accent); }
+.status-opt.active-wish { border-color: var(--wish); background: rgba(123,140,255,0.1); color: var(--wish); }
+.status-opt span { display: block; font-size: 1.2rem; margin-bottom: 2px; }
+.status-opt p { font-size: 0.7rem; font-weight: 700; }
+
+.submit-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+.submit-btn:active { transform: scale(0.98); }
+
+.delete-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--accent2);
+  border: 1.5px solid rgba(255,77,109,0.3);
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Noto Sans JP', sans-serif;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+.delete-btn:active { background: rgba(255,77,109,0.1); }
+
+/* ===== INSTALL BANNER ===== */
+.install-banner {
+  margin: 14px 20px 0;
+  background: linear-gradient(135deg, rgba(200,245,90,0.1), rgba(200,245,90,0.05));
+  border: 1px solid rgba(200,245,90,0.25);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.install-banner.hidden { display: none; }
+.install-icon { font-size: 1.6rem; flex-shrink: 0; }
+.install-text { flex: 1; }
+.install-text strong { font-size: 0.85rem; color: var(--accent); display: block; margin-bottom: 2px; }
+.install-text span { font-size: 0.72rem; color: var(--text2); line-height: 1.4; }
+.install-close { color: var(--text3); font-size: 1.2rem; cursor: pointer; flex-shrink: 0; padding: 4px; }
+
+/* PWA install instructions modal */
+.install-modal { max-height: 70vh; overflow-y: auto; }
+.install-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.install-step:last-child { border-bottom: none; }
+.step-num {
+  background: var(--accent);
+  color: #000;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-text { font-size: 0.88rem; line-height: 1.6; color: var(--text2); padding-top: 3px; }
+.step-text strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      UNRELEASED
+      <span>未発表曲コレクター</span>
+    </div>
+    <button class="add-btn" onclick="openAddModal()">＋</button>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" placeholder="曲名・アーティストで検索..." oninput="renderAll()" />
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" id="tab-all" onclick="setTab('all')">すべて</div>
+  <div class="tab" id="tab-collected" onclick="setTab('collected')">コレクション</div>
+  <div class="tab" id="tab-wish" onclick="setTab('wish')">ほしい</div>
+</div>
+
+<!-- ARTIST CHIPS -->
+<div class="artist-chips" id="artistChips"></div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num" id="statTotal">0</div>
+    <div class="stat-label">TOTAL</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statCollected" style="color:var(--accent)">0</div>
+    <div class="stat-label">COLLECTED</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statWish" style="color:var(--wish)">0</div>
+    <div class="stat-label">WISH LIST</div>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <div class="install-icon">📲</div>
+  <div class="install-text">
+    <strong>ホーム画面に追加できます</strong>
+    <span>アプリとして使えるようにしよう</span>
+  </div>
+  <div class="install-close" onclick="dismissInstall()">✕</div>
+</div>
+
+<!-- TRACKS -->
+<div class="section">
+  <div class="section-title" id="sectionTitle">ALL TRACKS</div>
+  <div class="tracks-list" id="tracksList"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="setTab('all')">
+    <div class="nav-icon">🎵</div>
+    <div class="nav-label">ALL</div>
+  </div>
+  <div class="nav-item" onclick="setTab('collected')">
+    <div class="nav-icon">💿</div>
+    <div class="nav-label">COLLECTED</div>
+  </div>
+  <div class="nav-item" onclick="setTab('wish')">
+    <div class="nav-icon">⭐</div>
+    <div class="nav-label">WISH</div>
+  </div>
+  <div class="nav-item" onclick="openInstallModal()">
+    <div class="nav-icon">📲</div>
+    <div class="nav-label">INSTALL</div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="addModal" onclick="closeModalOutside(event,'addModal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">// NEW TRACK</div>
+    <input type="hidden" id="editId" value="">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">曲名 *</label>
+        <input class="form-input" id="fTitle" placeholder="例: HAZE" maxlength="60" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">アーティスト *</label>
+      <input class="form-input" id="fArtist" placeholder="例: kid fresino" list="artistList" maxlength="40" />
+      <datalist id="artistList"></datalist>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">年 / 時期</label>
+        <input class="form-input" id="fYear" placeholder="例: 2019" maxlength="10" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">入手元</label>
+        <input class="form-input" id="fSource" placeholder="例: YouTube" maxlength="30" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">ステータス</label>
+      <div class="status-select">
+        <div class="status-opt active-collected" id="sCollected" onclick="setStatus('collected')">
+          <span>💿</span><p>持ってる</p>
+        </div>
+        <div class="status-opt" id="sWish" onclick="setStatus('wish')">
+          <span>⭐</span><p>ほしい</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="saveTrack()">保存する</button>
+    <button class="delete-btn" id="deleteBtn" style="display:none" onclick="deleteTrack()">削除する</button>
+  </div>
+</div>
+
+<!-- INSTALL MODAL -->
+<div class="modal-overlay" id="installModal" onclick="closeModalOutside(event,'installModal')">
+  <div class="modal install-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">// ホーム画面に追加</div>
+
+    <div class="install-step">
+      <div class="step-num">1</div>
+      <div class="step-text">このページを <strong>Safari</strong> で開く<br><span style="font-size:0.78rem;color:var(--text3)">※ Chromeでは使えません</span></div>
+    </div>
+    <div class="install-step">
+      <div class="step-num">2</div>
+      <div class="step-text">画面下の <strong>共有ボタン</strong>（□↑）をタップ</div>
+    </div>
+    <div class="install-step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>「ホーム画面に追加」</strong> をタップ<br><span style="font-size:0.78rem;color:var(--text3)">※ 下にスクロールすると出てきます</span></div>
+    </div>
+    <div class="install-step">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>「追加」</strong> をタップして完了！<br>ホーム画面にアイコンが追加されます🎉</div>
+    </div>
+
+    <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:10px;font-size:0.78rem;color:var(--text3);line-height:1.6;">
+      💡 データはこのデバイスに保存されます。アプリを削除してもデータは残ります。
+    </div>
+
+    <button class="submit-btn" style="margin-top:14px" onclick="closeModal('installModal')">閉じる</button>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+let tracks = JSON.parse(localStorage.getItem('unreleased_tracks') || '[]');
+let currentTab = 'all';
+let selectedArtist = null;
+let editStatus = 'collected';
+let editingId = null;
+
+const SAMPLE_TRACKS = [
+  { id: 1, title: 'example unreleased', artist: 'kid fresino', year: '2020', source: 'YouTube', status: 'collected' },
+  { id: 2, title: 'flashback demo', artist: 'Flashback S', year: '2019', source: 'Twitter', status: 'wish' },
+  { id: 3, title: 'untitled #3', artist: 'jjj', year: '2021', source: 'Live', status: 'collected' },
+];
+
+if (tracks.length === 0) {
+  tracks = SAMPLE_TRACKS;
+  save();
+}
+
+function save() {
+  localStorage.setItem('unreleased_tracks', JSON.stringify(tracks));
+}
+
+function genId() { return Date.now() + Math.random(); }
+
+// ===== RENDER =====
+function getArtists() {
+  const set = new Set(tracks.map(t => t.artist));
+  return [...set].sort();
+}
+
+function renderArtistChips() {
+  const chips = document.getElementById('artistChips');
+  const artists = getArtists();
+  chips.innerHTML = '';
+  if (artists.length === 0) return;
+  artists.forEach(a => {
+    const d = document.createElement('div');
+    d.className = 'artist-chip' + (selectedArtist === a ? ' selected' : '');
+    d.textContent = a;
+    d.onclick = () => { selectedArtist = selectedArtist === a ? null : a; renderAll(); };
+    chips.appendChild(d);
+  });
+}
+
+function renderStats() {
+  document.getElementById('statTotal').textContent = tracks.length;
+  document.getElementById('statCollected').textContent = tracks.filter(t=>t.status==='collected').length;
+  document.getElementById('statWish').textContent = tracks.filter(t=>t.status==='wish').length;
+}
+
+function renderTracks() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let list = tracks.filter(t => {
+    const matchQ = !q || t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q);
+    const matchTab = currentTab === 'all' || t.status === currentTab;
+    const matchArtist = !selectedArtist || t.artist === selectedArtist;
+    return matchQ && matchTab && matchArtist;
+  });
+
+  const titles = { all: 'ALL TRACKS', collected: 'COLLECTION', wish: 'WISH LIST' };
+  document.getElementById('sectionTitle').textContent = titles[currentTab] + ` (${list.length})`;
+
+  const container = document.getElementById('tracksList');
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">🎵</div><p>まだ曲がありません<br>＋ボタンで追加してみよう</p></div>`;
+    return;
+  }
+
+  container.innerHTML = list.map((t, i) => `
+    <div class="track-card ${t.status}" onclick="openEditModal('${t.id}')">
+      <div class="track-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="track-info">
+        <div class="track-name">${escHtml(t.title)}</div>
+        <div class="track-artist">${escHtml(t.artist)}</div>
+        <div class="track-tags">
+          ${t.status==='collected' ? '<span class="tag tag-collected">💿 所持</span>' : '<span class="tag tag-wish">⭐ WISH</span>'}
+          ${t.year ? `<span class="tag tag-year">${escHtml(t.year)}</span>` : ''}
+          ${t.source ? `<span class="tag tag-year">${escHtml(t.source)}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAll() {
+  renderArtistChips();
+  renderStats();
+  renderTracks();
+  updateArtistDatalist();
+}
+
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateArtistDatalist() {
+  const dl = document.getElementById('artistList');
+  dl.innerHTML = getArtists().map(a => `<option value="${escHtml(a)}">`).join('');
+}
+
+// ===== TABS =====
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navMap = { all:0, collected:1, wish:2 };
+  document.querySelectorAll('.nav-item')[navMap[tab]]?.classList.add('active');
+  renderAll();
+}
+
+// ===== MODAL =====
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '// NEW TRACK';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fArtist').value = '';
+  document.getElementById('fYear').value = '';
+  document.getElementById('fSource').value = '';
+  document.getElementById('deleteBtn').style.display = 'none';
+  setStatus('collected');
+  document.getElementById('addModal').classList.add('open');
+  setTimeout(() => document.getElementById('fTitle').focus(), 300);
+}
+
+function openEditModal(id) {
+  const t = tracks.find(t => String(t.id) === String(id));
+  if (!t) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = '// EDIT TRACK';
+  document.getElementById('fTitle').value = t.title;
+  document.getElementById('fArtist').value = t.artist;
+  document.getElementById('fYear').value = t.year || '';
+  document.getElementById('fSource').value = t.source || '';
+  document.getElementById('deleteBtn').style.display = 'block';
+  setStatus(t.status);
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function closeModalOutside(e, id) {
+  if (e.target.id === id) closeModal(id);
+}
+
+function setStatus(s) {
+  editStatus = s;
+  document.getElementById('sCollected').className = 'status-opt' + (s==='collected'?' active-collected':'');
+  document.getElementById('sWish').className = 'status-opt' + (s==='wish'?' active-wish':'');
+}
+
+function saveTrack() {
+  const title = document.getElementById('fTitle').value.trim();
+  const artist = document.getElementById('fArtist').value.trim();
+  if (!title || !artist) { alert('曲名とアーティスト名は必須です'); return; }
+
+  if (editingId) {
+    const idx = tracks.findIndex(t => String(t.id) === String(editingId));
+    if (idx !== -1) {
+      tracks[idx] = { ...tracks[idx], title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus };
+    }
+  } else {
+    tracks.unshift({ id: genId(), title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus });
+  }
+  save();
+  closeModal('addModal');
+  renderAll();
+}
+
+function deleteTrack() {
+  if (!confirm('この曲を削除しますか？')) return;
+  tracks = tracks.filter(t => String(t.id) !== String(editingId));
+  save();
+  closeModal('addModal');
+  renderAll();
+}
+
+// ===== INSTALL =====
+function openInstallModal() {
+  document.getElementById('installModal').classList.add('open');
+}
+
+function dismissInstall() {
+  document.getElementById('installBanner').classList.add('hidden');
+  localStorage.setItem('install_dismissed', '1');
+}
+
+if (localStorage.getItem('install_dismissed') || window.navigator.standalone) {
+  document.getElementById('installBanner').classList.add('hidden');
+}
+
+// ===== INIT =====
+renderAll();
+</script>
+
+<!-- Service Worker registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
