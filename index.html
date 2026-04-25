@@ -6,481 +6,334 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="UNRELEASED">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#080808">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon.svg">
 <title>UNRELEASED</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 
 :root {
-  --bg: #0a0a0a;
-  --bg2: #111;
-  --bg3: #181818;
-  --bg4: #222;
-  --border: #2a2a2a;
-  --text: #f0f0f0;
-  --text2: #888;
-  --text3: #555;
-  --accent: #c8f55a;
-  --accent2: #ff4d6d;
-  --wish: #7b8cff;
-  --radius: 14px;
+  --bg:#080808; --bg2:#101010; --bg3:#161616; --bg4:#1e1e1e; --bg5:#252525;
+  --border:#252525; --border2:#333;
+  --text:#efefef; --text2:#888; --text3:#444;
+  --accent:#c8f55a; --accent-dim:rgba(200,245,90,0.1);
+  --wish:#7b8cff; --wish-dim:rgba(123,140,255,0.1);
+  --danger:#ff4d6d;
+  --r:14px;
 }
-
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Noto Sans JP', sans-serif;
-  min-height: 100vh;
-  max-width: 480px;
-  margin: 0 auto;
-  padding-bottom: 100px;
+  background:var(--bg); color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;
+  min-height:100vh; max-width:480px; margin:0 auto;
+  padding-bottom:90px; overflow-x:hidden;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(10,10,10,0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid var(--border);
+  position:sticky; top:0; z-index:100;
+  background:rgba(8,8,8,0.95);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px 12px;
 }
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+.header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.logo { font-family:'Space Mono',monospace; font-weight:700; font-size:1.1rem; letter-spacing:0.08em; color:var(--accent); }
+.logo span { display:block; font-size:0.55rem; color:var(--text3); letter-spacing:0.2em; font-style:italic; margin-top:2px; }
+.header-btns { display:flex; gap:8px; }
+.icon-btn {
+  background:var(--bg3); border:1.5px solid var(--border2);
+  border-radius:50%; width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; cursor:pointer; transition:all 0.15s; flex-shrink:0;
 }
-.logo {
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 1.2rem;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-}
-.logo span { color: var(--text2); font-size: 0.65rem; display: block; letter-spacing: 0.2em; margin-top: -2px; }
+.icon-btn:active { transform:scale(0.88); }
+.icon-btn.primary { background:var(--accent); border-color:var(--accent); font-size:1.3rem; }
 
-.add-btn {
-  background: var(--accent);
-  color: #000;
-  border: none;
-  border-radius: 50%;
-  width: 40px; height: 40px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900;
-  transition: transform 0.15s;
-  flex-shrink: 0;
-}
-.add-btn:active { transform: scale(0.92); }
-
-/* Search */
-.search-wrap { position: relative; }
+.search-wrap { position:relative; }
 .search-input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 14px 10px 38px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
+  width:100%; background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:10px; padding:10px 14px 10px 36px;
+  color:var(--text); font-size:0.88rem; font-family:'Noto Sans JP',sans-serif;
+  outline:none; transition:border-color 0.2s;
 }
-.search-input:focus { border-color: #444; }
-.search-input::placeholder { color: var(--text3); }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 1rem; pointer-events: none; }
+.search-input:focus { border-color:var(--border2); }
+.search-input::placeholder { color:var(--text3); }
+.search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:0.95rem; pointer-events:none; }
 
-/* ===== TABS ===== */
+/* TABS */
 .tabs {
-  display: flex;
-  gap: 6px;
-  padding: 14px 20px 0;
-  overflow-x: auto;
-  scrollbar-width: none;
+  display:flex; gap:6px; padding:12px 18px 0;
+  overflow-x:auto; scrollbar-width:none;
 }
-.tabs::-webkit-scrollbar { display: none; }
+.tabs::-webkit-scrollbar { display:none; }
 .tab {
-  flex-shrink: 0;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  padding: 7px 16px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Noto Sans JP', sans-serif;
-  white-space: nowrap;
+  flex-shrink:0; background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:20px; padding:6px 14px;
+  font-size:0.76rem; font-weight:700; color:var(--text2);
+  cursor:pointer; transition:all 0.18s; white-space:nowrap;
+  font-family:'Noto Sans JP',sans-serif;
 }
-.tab.active { background: var(--accent); border-color: var(--accent); color: #000; }
+.tab.active { background:var(--accent); border-color:var(--accent); color:#000; }
 
-/* ===== STATS BAR ===== */
-.stats-bar {
-  display: flex;
-  gap: 10px;
-  padding: 14px 20px 0;
-}
-.stat-card {
-  flex: 1;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-}
-.stat-label { font-size: 0.65rem; color: var(--text3); margin-top: 4px; letter-spacing: 0.08em; }
-
-/* ===== SECTION ===== */
-.section { padding: 16px 20px 0; }
-.section-title {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--text3);
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-
-/* ===== ARTIST CHIPS ===== */
+/* ARTIST CHIPS */
 .artist-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 14px 20px 0;
+  display:flex; gap:6px; padding:10px 18px 0;
+  overflow-x:auto; scrollbar-width:none;
 }
+.artist-chips::-webkit-scrollbar { display:none; }
 .artist-chip {
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.2s;
+  flex-shrink:0; background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:20px; padding:5px 12px;
+  font-size:0.72rem; font-weight:700; color:var(--text2);
+  cursor:pointer; transition:all 0.18s; white-space:nowrap;
 }
-.artist-chip:active { transform: scale(0.95); }
-.artist-chip.selected { border-color: var(--accent); color: var(--accent); background: rgba(200,245,90,0.08); }
+.artist-chip.selected { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
 
-/* ===== TRACK CARD ===== */
-.tracks-list { display: flex; flex-direction: column; gap: 8px; }
+/* STATS */
+.stats-bar { display:flex; gap:8px; padding:12px 18px 0; }
+.stat-card { flex:1; background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center; }
+.stat-num { font-family:'Space Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--accent); line-height:1; }
+.stat-num.wish { color:var(--wish); }
+.stat-label { font-size:0.58rem; color:var(--text3); margin-top:3px; letter-spacing:0.1em; text-transform:uppercase; }
 
-.track-card {
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: border-color 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.track-card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--accent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.track-card.wish::before { background: var(--wish); opacity: 1; }
-.track-card.collected::before { background: var(--accent); opacity: 1; }
-.track-card:active { border-color: #444; }
+/* GRID */
+.section { padding:14px 18px 0; }
+.section-title { font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:0.2em; color:var(--text3); margin-bottom:10px; text-transform:uppercase; }
+.albums-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
-.track-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--text3);
-  width: 24px;
-  text-align: center;
-  flex-shrink: 0;
+/* ALBUM CARD */
+.album-card {
+  background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:var(--r); overflow:hidden; cursor:pointer;
+  transition:all 0.18s; position:relative;
 }
+.album-card:active { transform:scale(0.97); border-color:var(--border2); }
+.album-card.wish { border-color:rgba(123,140,255,0.3); }
+.album-card.collected { border-color:rgba(200,245,90,0.2); }
 
-.track-info { flex: 1; min-width: 0; }
-.track-name {
-  font-weight: 700;
-  font-size: 0.95rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text);
+.album-art-wrap { position:relative; aspect-ratio:1; overflow:hidden; background:var(--bg4); }
+.album-art { width:100%; height:100%; object-fit:cover; display:block; }
+.album-art-placeholder {
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-size:2.5rem; background:var(--bg4);
 }
-.track-artist {
-  font-size: 0.75rem;
-  color: var(--text2);
-  margin-top: 2px;
+.status-dot {
+  position:absolute; top:8px; right:8px;
+  width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
 }
-.track-tags { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
-.tag {
-  font-size: 0.6rem;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-.tag-wish { background: rgba(123,140,255,0.15); color: var(--wish); border: 1px solid rgba(123,140,255,0.3); }
-.tag-collected { background: rgba(200,245,90,0.1); color: var(--accent); border: 1px solid rgba(200,245,90,0.25); }
-.tag-year { background: var(--bg4); color: var(--text3); border: 1px solid var(--border); }
+.status-dot.collected { background:rgba(200,245,90,0.85); }
+.status-dot.wish { background:rgba(123,140,255,0.85); }
 
-.track-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.action-btn {
-  background: var(--bg4);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.15s;
+.album-info { padding:10px; }
+.album-title {
+  font-weight:700; font-size:0.82rem; line-height:1.3;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:var(--text);
 }
-.action-btn:active { transform: scale(0.9); }
-.action-btn.wish-active { background: rgba(123,140,255,0.2); border-color: var(--wish); }
-.action-btn.collect-active { background: rgba(200,245,90,0.15); border-color: var(--accent); }
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text3);
+.album-artist { font-size:0.7rem; color:var(--text2); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.album-meta { display:flex; gap:4px; margin-top:6px; flex-wrap:wrap; }
+.meta-tag {
+  font-size:0.58rem; padding:2px 6px; border-radius:8px; font-weight:700;
 }
-.empty-state .emoji { font-size: 3rem; margin-bottom: 16px; }
-.empty-state p { font-size: 0.9rem; line-height: 1.6; }
+.tag-collected { background:var(--accent-dim); color:var(--accent); }
+.tag-wish { background:var(--wish-dim); color:var(--wish); }
+.tag-year { background:var(--bg5); color:var(--text3); }
+.tag-unreleased { background:rgba(255,77,109,0.1); color:var(--danger); }
 
-/* ===== BOTTOM NAV ===== */
+/* EMPTY */
+.empty { text-align:center; padding:60px 20px; color:var(--text3); }
+.empty .e-icon { font-size:3rem; margin-bottom:14px; }
+.empty p { font-size:0.88rem; line-height:1.7; }
+
+/* BOTTOM NAV */
 .bottom-nav {
-  position: fixed;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  background: rgba(10,10,10,0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding: 10px 0 env(safe-area-inset-bottom, 10px);
+  position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:480px;
+  background:rgba(8,8,8,0.96);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex; padding:8px 0 env(safe-area-inset-bottom,8px);
+  z-index:100;
 }
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  padding: 6px 0;
-  transition: all 0.15s;
-}
-.nav-icon { font-size: 1.3rem; }
-.nav-label { font-size: 0.6rem; font-weight: 700; color: var(--text3); letter-spacing: 0.05em; }
-.nav-item.active .nav-label { color: var(--accent); }
-.nav-item.active .nav-icon { filter: drop-shadow(0 0 6px var(--accent)); }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding:6px 0; }
+.nav-icon { font-size:1.25rem; }
+.nav-label { font-size:0.58rem; font-weight:700; color:var(--text3); letter-spacing:0.05em; }
+.nav-item.active .nav-label { color:var(--accent); }
 
-/* ===== MODAL ===== */
+/* MODAL BASE */
 .modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(4px);
-  z-index: 200;
-  display: flex; align-items: flex-end; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.25s;
+  position:fixed; inset:0; background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  z-index:200; display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.22s;
 }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-
+.modal-overlay.open { opacity:1; pointer-events:all; }
 .modal {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 24px 24px 0 0;
-  padding: 20px 20px env(safe-area-inset-bottom, 20px);
-  width: 100%;
-  max-width: 480px;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:22px 22px 0 0;
+  padding:18px 20px env(safe-area-inset-bottom,20px);
+  width:100%; max-width:480px;
+  transform:translateY(100%);
+  transition:transform 0.28s cubic-bezier(0.34,1.4,0.64,1);
+  max-height:90vh; overflow-y:auto;
 }
-.modal-overlay.open .modal { transform: translateY(0); }
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-handle { width:36px; height:4px; background:var(--border2); border-radius:2px; margin:0 auto 18px; }
+.modal-title { font-family:'Space Mono',monospace; font-size:0.85rem; font-weight:700; color:var(--accent); letter-spacing:0.1em; margin-bottom:18px; }
 
-.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-.modal-title { font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 20px; }
-
-.form-group { margin-bottom: 14px; }
-.form-label { font-size: 0.7rem; font-weight: 700; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+/* FORM */
+.form-group { margin-bottom:12px; }
+.form-label { font-size:0.65rem; font-weight:700; color:var(--text3); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:5px; display:block; }
 .form-input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: var(--text);
-  font-size: 0.95rem;
-  font-family: 'Noto Sans JP', sans-serif;
-  outline: none;
-  transition: border-color 0.2s;
+  width:100%; background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:10px; padding:11px 13px;
+  color:var(--text); font-size:0.92rem; font-family:'Noto Sans JP',sans-serif;
+  outline:none; transition:border-color 0.18s;
 }
-.form-input:focus { border-color: #555; }
-.form-input::placeholder { color: var(--text3); }
+.form-input:focus { border-color:var(--border2); }
+.form-input::placeholder { color:var(--text3); }
+.form-row { display:flex; gap:8px; }
+.form-row .form-group { flex:1; }
 
-.form-row { display: flex; gap: 10px; }
-.form-row .form-group { flex: 1; }
-
-.status-select { display: flex; gap: 8px; }
+/* STATUS SELECT */
+.status-select { display:flex; gap:8px; }
 .status-opt {
-  flex: 1;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
+  flex:1; background:var(--bg3); border:1.5px solid var(--border);
+  border-radius:10px; padding:10px 8px; text-align:center; cursor:pointer; transition:all 0.18s;
 }
-.status-opt.active-collected { border-color: var(--accent); background: rgba(200,245,90,0.1); color: var(--accent); }
-.status-opt.active-wish { border-color: var(--wish); background: rgba(123,140,255,0.1); color: var(--wish); }
-.status-opt span { display: block; font-size: 1.2rem; margin-bottom: 2px; }
-.status-opt p { font-size: 0.7rem; font-weight: 700; }
+.status-opt span { display:block; font-size:1.2rem; margin-bottom:2px; }
+.status-opt p { font-size:0.68rem; font-weight:700; color:var(--text2); }
+.status-opt.active-c { border-color:var(--accent); background:var(--accent-dim); }
+.status-opt.active-c p { color:var(--accent); }
+.status-opt.active-w { border-color:var(--wish); background:var(--wish-dim); }
+.status-opt.active-w p { color:var(--wish); }
 
+/* IMAGE DROP ZONE */
+.drop-zone {
+  border:2px dashed var(--border2); border-radius:12px;
+  padding:20px; text-align:center; cursor:pointer;
+  transition:all 0.2s; position:relative; overflow:hidden;
+  background:var(--bg3);
+}
+.drop-zone:hover, .drop-zone.drag { border-color:var(--accent); background:var(--accent-dim); }
+.drop-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.drop-zone-icon { font-size:2rem; margin-bottom:8px; }
+.drop-zone-text { font-size:0.82rem; color:var(--text2); font-weight:700; }
+.drop-zone-sub { font-size:0.68rem; color:var(--text3); margin-top:4px; }
+
+.preview-img-wrap { position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1; background:var(--bg4); }
+.preview-img { width:100%; height:100%; object-fit:cover; display:block; }
+.preview-change {
+  position:absolute; inset:0; background:rgba(0,0,0,0.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.75rem; font-weight:700; color:#fff; opacity:0;
+  transition:opacity 0.18s; cursor:pointer;
+}
+.preview-img-wrap:hover .preview-change { opacity:1; }
+.preview-img-wrap input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+/* AI SCAN BTN */
+.scan-btn {
+  width:100%; background:var(--bg4); border:1.5px solid var(--border2);
+  border-radius:10px; padding:11px;
+  font-size:0.82rem; font-weight:700; color:var(--text2);
+  cursor:pointer; transition:all 0.18s; display:flex; align-items:center; justify-content:center; gap:8px;
+  font-family:'Noto Sans JP',sans-serif; margin-top:8px;
+}
+.scan-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+.scan-btn:active { transform:scale(0.98); }
+.scan-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* SUBMIT */
 .submit-btn {
-  width: 100%;
-  background: var(--accent);
-  color: #000;
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  font-size: 0.95rem;
-  font-weight: 900;
-  font-family: 'Noto Sans JP', sans-serif;
-  cursor: pointer;
-  margin-top: 6px;
-  transition: all 0.15s;
-  letter-spacing: 0.05em;
+  width:100%; background:var(--accent); color:#000; border:none;
+  border-radius:12px; padding:14px; font-size:0.95rem; font-weight:900;
+  font-family:'Noto Sans JP',sans-serif; cursor:pointer; transition:all 0.15s;
+  margin-top:6px; letter-spacing:0.04em;
 }
-.submit-btn:active { transform: scale(0.98); }
-
+.submit-btn:active { transform:scale(0.98); opacity:0.9; }
 .delete-btn {
-  width: 100%;
-  background: transparent;
-  color: var(--accent2);
-  border: 1.5px solid rgba(255,77,109,0.3);
-  border-radius: 12px;
-  padding: 13px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  font-family: 'Noto Sans JP', sans-serif;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.15s;
+  width:100%; background:transparent; color:var(--danger);
+  border:1.5px solid rgba(255,77,109,0.25);
+  border-radius:12px; padding:12px; font-size:0.82rem; font-weight:700;
+  font-family:'Noto Sans JP',sans-serif; cursor:pointer; margin-top:8px; transition:all 0.15s;
 }
-.delete-btn:active { background: rgba(255,77,109,0.1); }
+.delete-btn:active { background:rgba(255,77,109,0.08); }
 
-/* ===== INSTALL BANNER ===== */
+/* DETAIL MODAL */
+.detail-art { width:100%; aspect-ratio:1; object-fit:cover; border-radius:12px; display:block; }
+.detail-art-placeholder { width:100%; aspect-ratio:1; background:var(--bg4); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:4rem; }
+.detail-title { font-weight:900; font-size:1.3rem; margin-top:14px; line-height:1.2; }
+.detail-artist { color:var(--text2); margin-top:4px; font-size:0.9rem; }
+.detail-tags { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.detail-actions { display:flex; gap:8px; margin-top:16px; }
+.detail-action-btn {
+  flex:1; background:var(--bg3); border:1.5px solid var(--border2);
+  border-radius:10px; padding:12px; font-size:0.8rem; font-weight:700;
+  color:var(--text2); cursor:pointer; font-family:'Noto Sans JP',sans-serif;
+  text-align:center; transition:all 0.15s;
+}
+.detail-action-btn:active { transform:scale(0.97); }
+
+/* AI LOADING */
+.ai-loading { display:flex; align-items:center; gap:8px; padding:10px 12px; background:var(--accent-dim); border-radius:10px; margin-top:8px; }
+.ai-loading-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 1s infinite; }
+.ai-loading-dot:nth-child(2) { animation-delay:0.2s; }
+.ai-loading-dot:nth-child(3) { animation-delay:0.4s; }
+@keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1)} }
+.ai-loading-text { font-size:0.75rem; color:var(--accent); font-weight:700; }
+
+/* INSTALL BANNER */
 .install-banner {
-  margin: 14px 20px 0;
-  background: linear-gradient(135deg, rgba(200,245,90,0.1), rgba(200,245,90,0.05));
-  border: 1px solid rgba(200,245,90,0.25);
-  border-radius: 14px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  margin:12px 18px 0;
+  background:var(--accent-dim); border:1px solid rgba(200,245,90,0.2);
+  border-radius:12px; padding:12px 14px;
+  display:flex; align-items:center; gap:10px;
 }
-.install-banner.hidden { display: none; }
-.install-icon { font-size: 1.6rem; flex-shrink: 0; }
-.install-text { flex: 1; }
-.install-text strong { font-size: 0.85rem; color: var(--accent); display: block; margin-bottom: 2px; }
-.install-text span { font-size: 0.72rem; color: var(--text2); line-height: 1.4; }
-.install-close { color: var(--text3); font-size: 1.2rem; cursor: pointer; flex-shrink: 0; padding: 4px; }
+.install-banner.hidden { display:none; }
+.install-text strong { font-size:0.8rem; color:var(--accent); display:block; margin-bottom:1px; }
+.install-text span { font-size:0.68rem; color:var(--text2); }
+.install-close { color:var(--text3); font-size:1.1rem; cursor:pointer; margin-left:auto; padding:4px; flex-shrink:0; }
 
-/* PWA install instructions modal */
-.install-modal { max-height: 70vh; overflow-y: auto; }
-.install-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.install-step:last-child { border-bottom: none; }
-.step-num {
-  background: var(--accent);
-  color: #000;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 0.75rem;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.step-text { font-size: 0.88rem; line-height: 1.6; color: var(--text2); padding-top: 3px; }
-.step-text strong { color: var(--text); }
+input[type="file"] { display:none; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="header-top">
-    <div class="logo">
-      UNRELEASED
-      <span>未発表曲コレクター</span>
+    <div class="logo">UNRELEASED<span>未発表アルバムコレクター</span></div>
+    <div class="header-btns">
+      <div class="icon-btn" onclick="openInstallModal()" title="ホーム画面に追加">📲</div>
+      <div class="icon-btn primary" onclick="openAddModal()">＋</div>
     </div>
-    <button class="add-btn" onclick="openAddModal()">＋</button>
   </div>
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" placeholder="曲名・アーティストで検索..." oninput="renderAll()" />
+    <input class="search-input" id="searchInput" placeholder="アルバム名・アーティストで検索..." oninput="renderAll()" />
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
   <div class="tab active" id="tab-all" onclick="setTab('all')">すべて</div>
-  <div class="tab" id="tab-collected" onclick="setTab('collected')">コレクション</div>
-  <div class="tab" id="tab-wish" onclick="setTab('wish')">ほしい</div>
+  <div class="tab" id="tab-collected" onclick="setTab('collected')">コレクション 💿</div>
+  <div class="tab" id="tab-wish" onclick="setTab('wish')">ほしい ⭐</div>
 </div>
 
-<!-- ARTIST CHIPS -->
 <div class="artist-chips" id="artistChips"></div>
 
-<!-- STATS -->
 <div class="stats-bar">
-  <div class="stat-card">
-    <div class="stat-num" id="statTotal">0</div>
-    <div class="stat-label">TOTAL</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num" id="statCollected" style="color:var(--accent)">0</div>
-    <div class="stat-label">COLLECTED</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-num" id="statWish" style="color:var(--wish)">0</div>
-    <div class="stat-label">WISH LIST</div>
-  </div>
+  <div class="stat-card"><div class="stat-num" id="sTotal">0</div><div class="stat-label">TOTAL</div></div>
+  <div class="stat-card"><div class="stat-num" id="sCollected">0</div><div class="stat-label">COLLECTED</div></div>
+  <div class="stat-card"><div class="stat-num wish" id="sWish">0</div><div class="stat-label">WISH</div></div>
 </div>
 
-<!-- INSTALL BANNER -->
 <div class="install-banner" id="installBanner">
-  <div class="install-icon">📲</div>
+  <span style="font-size:1.4rem">📲</span>
   <div class="install-text">
     <strong>ホーム画面に追加できます</strong>
     <span>アプリとして使えるようにしよう</span>
@@ -488,315 +341,378 @@ body {
   <div class="install-close" onclick="dismissInstall()">✕</div>
 </div>
 
-<!-- TRACKS -->
 <div class="section">
-  <div class="section-title" id="sectionTitle">ALL TRACKS</div>
-  <div class="tracks-list" id="tracksList"></div>
+  <div class="section-title" id="sectionTitle">ALL ALBUMS</div>
+  <div class="albums-grid" id="albumsGrid"></div>
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <div class="nav-item active" onclick="setTab('all')">
-    <div class="nav-icon">🎵</div>
-    <div class="nav-label">ALL</div>
-  </div>
-  <div class="nav-item" onclick="setTab('collected')">
-    <div class="nav-icon">💿</div>
-    <div class="nav-label">COLLECTED</div>
-  </div>
-  <div class="nav-item" onclick="setTab('wish')">
-    <div class="nav-icon">⭐</div>
-    <div class="nav-label">WISH</div>
-  </div>
-  <div class="nav-item" onclick="openInstallModal()">
-    <div class="nav-icon">📲</div>
-    <div class="nav-label">INSTALL</div>
-  </div>
+  <div class="nav-item active" id="nav-all" onclick="setTab('all')"><div class="nav-icon">🎵</div><div class="nav-label">ALL</div></div>
+  <div class="nav-item" id="nav-collected" onclick="setTab('collected')"><div class="nav-icon">💿</div><div class="nav-label">COLLECTED</div></div>
+  <div class="nav-item" id="nav-wish" onclick="setTab('wish')"><div class="nav-icon">⭐</div><div class="nav-label">WISH</div></div>
+  <div class="nav-item" onclick="openInstallModal()"><div class="nav-icon">📲</div><div class="nav-label">INSTALL</div></div>
 </div>
 
 <!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="addModal" onclick="closeModalOutside(event,'addModal')">
+<div class="modal-overlay" id="addModal" onclick="outsideClose(event,'addModal')">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modalTitle">// NEW TRACK</div>
-    <input type="hidden" id="editId" value="">
+    <div class="modal-title" id="modalTitle">// NEW ALBUM</div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">曲名 *</label>
-        <input class="form-input" id="fTitle" placeholder="例: HAZE" maxlength="60" />
+    <!-- Image upload -->
+    <div class="form-group">
+      <label class="form-label">アルバムアート / スクショ</label>
+      <div id="dropZone" class="drop-zone">
+        <input type="file" accept="image/*" onchange="onImageSelect(event)" id="imgFileInput" />
+        <div class="drop-zone-icon">📸</div>
+        <div class="drop-zone-text">タップして画像を選択</div>
+        <div class="drop-zone-sub">スクショをそのまま貼れます</div>
+      </div>
+      <div id="previewWrap" style="display:none" class="preview-img-wrap">
+        <img id="previewImg" class="preview-img" />
+        <div class="preview-change">タップして変更<input type="file" accept="image/*" onchange="onImageSelect(event)" /></div>
+      </div>
+      <button class="scan-btn" id="scanBtn" onclick="scanImage()" style="display:none">
+        <span>🤖</span> AIでアルバム名・アーティストを読み取る
+      </button>
+      <div class="ai-loading" id="aiLoading" style="display:none">
+        <div class="ai-loading-dot"></div>
+        <div class="ai-loading-dot"></div>
+        <div class="ai-loading-dot"></div>
+        <div class="ai-loading-text">AIが画像を解析中...</div>
       </div>
     </div>
 
     <div class="form-group">
-      <label class="form-label">アーティスト *</label>
-      <input class="form-input" id="fArtist" placeholder="例: kid fresino" list="artistList" maxlength="40" />
-      <datalist id="artistList"></datalist>
+      <label class="form-label">アルバム名 *</label>
+      <input class="form-input" id="fTitle" placeholder="例: FLY FALL" maxlength="60" />
     </div>
-
+    <div class="form-group">
+      <label class="form-label">アーティスト *</label>
+      <input class="form-input" id="fArtist" placeholder="例: Fla$hBackS" list="artistDatalist" maxlength="40" />
+      <datalist id="artistDatalist"></datalist>
+    </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">年 / 時期</label>
-        <input class="form-input" id="fYear" placeholder="例: 2019" maxlength="10" />
+        <input class="form-input" id="fYear" placeholder="例: 2023" maxlength="10" />
       </div>
       <div class="form-group">
         <label class="form-label">入手元</label>
-        <input class="form-input" id="fSource" placeholder="例: YouTube" maxlength="30" />
+        <input class="form-input" id="fSource" placeholder="例: Twitter" maxlength="30" />
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">ステータス</label>
       <div class="status-select">
-        <div class="status-opt active-collected" id="sCollected" onclick="setStatus('collected')">
-          <span>💿</span><p>持ってる</p>
-        </div>
-        <div class="status-opt" id="sWish" onclick="setStatus('wish')">
-          <span>⭐</span><p>ほしい</p>
-        </div>
+        <div class="status-opt active-c" id="sC" onclick="setStatus('collected')"><span>💿</span><p>持ってる</p></div>
+        <div class="status-opt" id="sW" onclick="setStatus('wish')"><span>⭐</span><p>ほしい</p></div>
       </div>
     </div>
+    <button class="submit-btn" onclick="saveAlbum()">保存する</button>
+    <button class="delete-btn" id="deleteBtn" style="display:none" onclick="deleteAlbum()">削除する</button>
+  </div>
+</div>
 
-    <button class="submit-btn" onclick="saveTrack()">保存する</button>
-    <button class="delete-btn" id="deleteBtn" style="display:none" onclick="deleteTrack()">削除する</button>
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="outsideClose(event,'detailModal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="detailContent"></div>
   </div>
 </div>
 
 <!-- INSTALL MODAL -->
-<div class="modal-overlay" id="installModal" onclick="closeModalOutside(event,'installModal')">
-  <div class="modal install-modal">
+<div class="modal-overlay" id="installModal" onclick="outsideClose(event,'installModal')">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">// ホーム画面に追加</div>
-
-    <div class="install-step">
-      <div class="step-num">1</div>
-      <div class="step-text">このページを <strong>Safari</strong> で開く<br><span style="font-size:0.78rem;color:var(--text3)">※ Chromeでは使えません</span></div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      ${[
+        ['1','Safariでこのページを開く','※ ChromeではなくSafariが必要です'],
+        ['2','画面下の共有ボタン（□↑）をタップ',''],
+        ['3','「ホーム画面に追加」をタップ','下にスクロールすると出てきます'],
+        ['4','「追加」をタップして完了🎉','ホーム画面にアイコンが現れます'],
+      ].map(([n,t,s])=>`
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)">
+        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${n}</div>
+        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">${t}</div>${s?`<div style="font-size:0.72rem;color:var(--text3);margin-top:2px">${s}</div>`:''}</div>
+      </div>`).join('')}
     </div>
-    <div class="install-step">
-      <div class="step-num">2</div>
-      <div class="step-text">画面下の <strong>共有ボタン</strong>（□↑）をタップ</div>
-    </div>
-    <div class="install-step">
-      <div class="step-num">3</div>
-      <div class="step-text"><strong>「ホーム画面に追加」</strong> をタップ<br><span style="font-size:0.78rem;color:var(--text3)">※ 下にスクロールすると出てきます</span></div>
-    </div>
-    <div class="install-step">
-      <div class="step-num">4</div>
-      <div class="step-text"><strong>「追加」</strong> をタップして完了！<br>ホーム画面にアイコンが追加されます🎉</div>
-    </div>
-
-    <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:10px;font-size:0.78rem;color:var(--text3);line-height:1.6;">
-      💡 データはこのデバイスに保存されます。アプリを削除してもデータは残ります。
-    </div>
-
     <button class="submit-btn" style="margin-top:14px" onclick="closeModal('installModal')">閉じる</button>
   </div>
 </div>
 
 <script>
-// ===== DATA =====
-let tracks = JSON.parse(localStorage.getItem('unreleased_tracks') || '[]');
-let currentTab = 'all';
+// ===== STATE =====
+let albums = JSON.parse(localStorage.getItem('unreleased_albums') || 'null') || [
+  { id:1, title:'FLY FALL', artist:'Fla$hBackS', year:'2023', source:'Apple Music', status:'collected', img:null },
+  { id:2, title:'20/20', artist:'kid fresino', year:'2020', source:'Spotify', status:'collected', img:null },
+  { id:3, title:'ZZZONBIE', artist:'jjj', year:'2022', source:'Twitter', status:'wish', img:null },
+];
+let tab = 'all';
 let selectedArtist = null;
 let editStatus = 'collected';
 let editingId = null;
+let currentImgData = null;
 
-const SAMPLE_TRACKS = [
-  { id: 1, title: 'example unreleased', artist: 'kid fresino', year: '2020', source: 'YouTube', status: 'collected' },
-  { id: 2, title: 'flashback demo', artist: 'Flashback S', year: '2019', source: 'Twitter', status: 'wish' },
-  { id: 3, title: 'untitled #3', artist: 'jjj', year: '2021', source: 'Live', status: 'collected' },
-];
-
-if (tracks.length === 0) {
-  tracks = SAMPLE_TRACKS;
-  save();
-}
-
-function save() {
-  localStorage.setItem('unreleased_tracks', JSON.stringify(tracks));
-}
-
+function save() { localStorage.setItem('unreleased_albums', JSON.stringify(albums)); }
 function genId() { return Date.now() + Math.random(); }
 
 // ===== RENDER =====
-function getArtists() {
-  const set = new Set(tracks.map(t => t.artist));
-  return [...set].sort();
-}
+function getArtists() { return [...new Set(albums.map(a=>a.artist))].sort(); }
 
 function renderArtistChips() {
-  const chips = document.getElementById('artistChips');
+  const el = document.getElementById('artistChips');
   const artists = getArtists();
-  chips.innerHTML = '';
-  if (artists.length === 0) return;
-  artists.forEach(a => {
-    const d = document.createElement('div');
-    d.className = 'artist-chip' + (selectedArtist === a ? ' selected' : '');
-    d.textContent = a;
-    d.onclick = () => { selectedArtist = selectedArtist === a ? null : a; renderAll(); };
-    chips.appendChild(d);
-  });
+  if (!artists.length) { el.innerHTML=''; return; }
+  el.innerHTML = artists.map(a=>`
+    <div class="artist-chip${selectedArtist===a?' selected':''}" onclick="selectArtist('${escAttr(a)}')">${esc(a)}</div>
+  `).join('');
 }
+
+function selectArtist(a) { selectedArtist = selectedArtist===a ? null : a; renderAll(); }
 
 function renderStats() {
-  document.getElementById('statTotal').textContent = tracks.length;
-  document.getElementById('statCollected').textContent = tracks.filter(t=>t.status==='collected').length;
-  document.getElementById('statWish').textContent = tracks.filter(t=>t.status==='wish').length;
+  document.getElementById('sTotal').textContent = albums.length;
+  document.getElementById('sCollected').textContent = albums.filter(a=>a.status==='collected').length;
+  document.getElementById('sWish').textContent = albums.filter(a=>a.status==='wish').length;
 }
 
-function renderTracks() {
+function renderGrid() {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  let list = tracks.filter(t => {
-    const matchQ = !q || t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q);
-    const matchTab = currentTab === 'all' || t.status === currentTab;
-    const matchArtist = !selectedArtist || t.artist === selectedArtist;
-    return matchQ && matchTab && matchArtist;
+  let list = albums.filter(a => {
+    const mq = !q || a.title.toLowerCase().includes(q) || a.artist.toLowerCase().includes(q);
+    const mt = tab==='all' || a.status===tab;
+    const ma = !selectedArtist || a.artist===selectedArtist;
+    return mq && mt && ma;
   });
-
-  const titles = { all: 'ALL TRACKS', collected: 'COLLECTION', wish: 'WISH LIST' };
-  document.getElementById('sectionTitle').textContent = titles[currentTab] + ` (${list.length})`;
-
-  const container = document.getElementById('tracksList');
-  if (list.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="emoji">🎵</div><p>まだ曲がありません<br>＋ボタンで追加してみよう</p></div>`;
+  const titles = { all:'ALL ALBUMS', collected:'COLLECTION', wish:'WISH LIST' };
+  document.getElementById('sectionTitle').textContent = `${titles[tab]} (${list.length})`;
+  const grid = document.getElementById('albumsGrid');
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="e-icon">🎵</div><p>まだアルバムがありません<br>＋ボタンで追加しよう</p></div>`;
     return;
   }
-
-  container.innerHTML = list.map((t, i) => `
-    <div class="track-card ${t.status}" onclick="openEditModal('${t.id}')">
-      <div class="track-num">${String(i+1).padStart(2,'0')}</div>
-      <div class="track-info">
-        <div class="track-name">${escHtml(t.title)}</div>
-        <div class="track-artist">${escHtml(t.artist)}</div>
-        <div class="track-tags">
-          ${t.status==='collected' ? '<span class="tag tag-collected">💿 所持</span>' : '<span class="tag tag-wish">⭐ WISH</span>'}
-          ${t.year ? `<span class="tag tag-year">${escHtml(t.year)}</span>` : ''}
-          ${t.source ? `<span class="tag tag-year">${escHtml(t.source)}</span>` : ''}
+  grid.innerHTML = list.map(a=>`
+    <div class="album-card ${a.status}" onclick="openDetail('${a.id}')">
+      <div class="album-art-wrap">
+        ${a.img ? `<img class="album-art" src="${a.img}" />` : `<div class="album-art-placeholder">💿</div>`}
+        <div class="status-dot ${a.status}">${a.status==='collected'?'💿':'⭐'}</div>
+      </div>
+      <div class="album-info">
+        <div class="album-title">${esc(a.title)}</div>
+        <div class="album-artist">${esc(a.artist)}</div>
+        <div class="album-meta">
+          <span class="meta-tag ${a.status==='collected'?'tag-collected':'tag-wish'}">${a.status==='collected'?'所持':'WISH'}</span>
+          ${a.year?`<span class="meta-tag tag-year">${esc(a.year)}</span>`:''}
         </div>
       </div>
     </div>
   `).join('');
 }
 
-function renderAll() {
-  renderArtistChips();
-  renderStats();
-  renderTracks();
-  updateArtistDatalist();
-}
+function renderAll() { renderArtistChips(); renderStats(); renderGrid(); updateDatalist(); }
 
-function escHtml(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s) { return (s||'').replace(/'/g,"\\'"); }
 
-function updateArtistDatalist() {
-  const dl = document.getElementById('artistList');
-  dl.innerHTML = getArtists().map(a => `<option value="${escHtml(a)}">`).join('');
+function updateDatalist() {
+  document.getElementById('artistDatalist').innerHTML = getArtists().map(a=>`<option value="${esc(a)}">`).join('');
 }
 
 // ===== TABS =====
-function setTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-'+tab)?.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navMap = { all:0, collected:1, wish:2 };
-  document.querySelectorAll('.nav-item')[navMap[tab]]?.classList.add('active');
+function setTab(t) {
+  tab = t;
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav-'+t)?.classList.add('active');
   renderAll();
+}
+
+// ===== IMAGE =====
+function onImageSelect(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    currentImgData = ev.target.result;
+    document.getElementById('dropZone').style.display = 'none';
+    const pw = document.getElementById('previewWrap');
+    pw.style.display = 'block';
+    document.getElementById('previewImg').src = currentImgData;
+    document.getElementById('scanBtn').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===== AI SCAN =====
+async function scanImage() {
+  if (!currentImgData) return;
+  const btn = document.getElementById('scanBtn');
+  const loading = document.getElementById('aiLoading');
+  btn.style.display = 'none';
+  loading.style.display = 'flex';
+
+  try {
+    const base64 = currentImgData.split(',')[1];
+    const mediaType = currentImgData.split(';')[0].split(':')[1];
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: mediaType, data: base64 }
+            },
+            {
+              type: 'text',
+              text: 'この画像からアルバム名とアーティスト名を読み取ってください。必ずJSON形式のみで返答してください。例: {"album":"FLY FALL","artist":"Fla$hBackS"} 読み取れない場合は {"album":"","artist":""} を返してください。'
+            }
+          ]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.find(c=>c.type==='text')?.text || '';
+    const jsonMatch = text.match(/\{[^}]+\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      if (parsed.album) document.getElementById('fTitle').value = parsed.album;
+      if (parsed.artist) document.getElementById('fArtist').value = parsed.artist;
+    }
+  } catch(e) {
+    console.error(e);
+  }
+
+  loading.style.display = 'none';
+  btn.style.display = 'flex';
 }
 
 // ===== MODAL =====
 function openAddModal() {
   editingId = null;
-  document.getElementById('modalTitle').textContent = '// NEW TRACK';
+  currentImgData = null;
+  document.getElementById('modalTitle').textContent = '// NEW ALBUM';
   document.getElementById('fTitle').value = '';
   document.getElementById('fArtist').value = '';
   document.getElementById('fYear').value = '';
   document.getElementById('fSource').value = '';
+  document.getElementById('dropZone').style.display = 'block';
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('scanBtn').style.display = 'none';
+  document.getElementById('aiLoading').style.display = 'none';
   document.getElementById('deleteBtn').style.display = 'none';
   setStatus('collected');
-  document.getElementById('addModal').classList.add('open');
-  setTimeout(() => document.getElementById('fTitle').focus(), 300);
+  openModal('addModal');
+}
+
+function openDetail(id) {
+  const a = albums.find(x=>String(x.id)===String(id)); if(!a) return;
+  document.getElementById('detailContent').innerHTML = `
+    ${a.img ? `<img class="detail-art" src="${a.img}" />` : `<div class="detail-art-placeholder">💿</div>`}
+    <div class="detail-title">${esc(a.title)}</div>
+    <div class="detail-artist">${esc(a.artist)}</div>
+    <div class="detail-tags">
+      <span class="meta-tag ${a.status==='collected'?'tag-collected':'tag-wish'}">${a.status==='collected'?'💿 所持':'⭐ WISH'}</span>
+      ${a.year?`<span class="meta-tag tag-year">${esc(a.year)}</span>`:''}
+      ${a.source?`<span class="meta-tag tag-year">${esc(a.source)}</span>`:''}
+    </div>
+    <div class="detail-actions">
+      <div class="detail-action-btn" onclick="editFromDetail('${a.id}')">✏️ 編集</div>
+      <div class="detail-action-btn" onclick="toggleStatus('${a.id}')">${a.status==='collected'?'⭐ ほしいに変更':'💿 所持に変更'}</div>
+    </div>
+  `;
+  openModal('detailModal');
+}
+
+function editFromDetail(id) {
+  closeModal('detailModal');
+  setTimeout(() => openEditModal(id), 200);
+}
+
+function toggleStatus(id) {
+  const a = albums.find(x=>String(x.id)===String(id)); if(!a) return;
+  a.status = a.status==='collected' ? 'wish' : 'collected';
+  save(); closeModal('detailModal'); renderAll();
 }
 
 function openEditModal(id) {
-  const t = tracks.find(t => String(t.id) === String(id));
-  if (!t) return;
+  const a = albums.find(x=>String(x.id)===String(id)); if(!a) return;
   editingId = id;
-  document.getElementById('modalTitle').textContent = '// EDIT TRACK';
-  document.getElementById('fTitle').value = t.title;
-  document.getElementById('fArtist').value = t.artist;
-  document.getElementById('fYear').value = t.year || '';
-  document.getElementById('fSource').value = t.source || '';
+  currentImgData = a.img || null;
+  document.getElementById('modalTitle').textContent = '// EDIT ALBUM';
+  document.getElementById('fTitle').value = a.title;
+  document.getElementById('fArtist').value = a.artist;
+  document.getElementById('fYear').value = a.year||'';
+  document.getElementById('fSource').value = a.source||'';
+  if (a.img) {
+    document.getElementById('dropZone').style.display = 'none';
+    document.getElementById('previewWrap').style.display = 'block';
+    document.getElementById('previewImg').src = a.img;
+    document.getElementById('scanBtn').style.display = 'flex';
+  } else {
+    document.getElementById('dropZone').style.display = 'block';
+    document.getElementById('previewWrap').style.display = 'none';
+    document.getElementById('scanBtn').style.display = 'none';
+  }
+  document.getElementById('aiLoading').style.display = 'none';
   document.getElementById('deleteBtn').style.display = 'block';
-  setStatus(t.status);
-  document.getElementById('addModal').classList.add('open');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-function closeModalOutside(e, id) {
-  if (e.target.id === id) closeModal(id);
+  setStatus(a.status);
+  openModal('addModal');
 }
 
 function setStatus(s) {
   editStatus = s;
-  document.getElementById('sCollected').className = 'status-opt' + (s==='collected'?' active-collected':'');
-  document.getElementById('sWish').className = 'status-opt' + (s==='wish'?' active-wish':'');
+  document.getElementById('sC').className = 'status-opt' + (s==='collected'?' active-c':'');
+  document.getElementById('sW').className = 'status-opt' + (s==='wish'?' active-w':'');
 }
 
-function saveTrack() {
+function saveAlbum() {
   const title = document.getElementById('fTitle').value.trim();
   const artist = document.getElementById('fArtist').value.trim();
-  if (!title || !artist) { alert('曲名とアーティスト名は必須です'); return; }
-
+  if (!title || !artist) { alert('アルバム名とアーティスト名は必須です'); return; }
+  const data = { title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus, img: currentImgData };
   if (editingId) {
-    const idx = tracks.findIndex(t => String(t.id) === String(editingId));
-    if (idx !== -1) {
-      tracks[idx] = { ...tracks[idx], title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus };
-    }
+    const i = albums.findIndex(a=>String(a.id)===String(editingId));
+    if (i!==-1) albums[i] = { ...albums[i], ...data };
   } else {
-    tracks.unshift({ id: genId(), title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus });
+    albums.unshift({ id: genId(), ...data });
   }
-  save();
-  closeModal('addModal');
-  renderAll();
+  save(); closeModal('addModal'); renderAll();
 }
 
-function deleteTrack() {
-  if (!confirm('この曲を削除しますか？')) return;
-  tracks = tracks.filter(t => String(t.id) !== String(editingId));
-  save();
-  closeModal('addModal');
-  renderAll();
+function deleteAlbum() {
+  if (!confirm('このアルバムを削除しますか？')) return;
+  albums = albums.filter(a=>String(a.id)!==String(editingId));
+  save(); closeModal('addModal'); renderAll();
 }
 
-// ===== INSTALL =====
-function openInstallModal() {
-  document.getElementById('installModal').classList.add('open');
-}
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function outsideClose(e, id) { if(e.target.id===id) closeModal(id); }
+function openInstallModal() { openModal('installModal'); }
 
 function dismissInstall() {
   document.getElementById('installBanner').classList.add('hidden');
-  localStorage.setItem('install_dismissed', '1');
+  localStorage.setItem('install_dismissed','1');
 }
-
 if (localStorage.getItem('install_dismissed') || window.navigator.standalone) {
   document.getElementById('installBanner').classList.add('hidden');
 }
 
-// ===== INIT =====
 renderAll();
-</script>
 
-<!-- Service Worker registration -->
-<script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  });
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
 </script>
 </body>

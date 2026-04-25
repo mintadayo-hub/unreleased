@@ -1,18 +1,13 @@
 {
-  "name": "UNRELEASED - 未発表曲コレクター",
+  "name": "UNRELEASED - 未発表アルバムコレクター",
   "short_name": "UNRELEASED",
-  "description": "ヒップホップ未発表曲コレクション管理アプリ",
+  "description": "ヒップホップ未発表アルバムコレクション管理",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#0a0a0a",
+  "background_color": "#080808",
+  "theme_color": "#080808",
   "orientation": "portrait",
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
