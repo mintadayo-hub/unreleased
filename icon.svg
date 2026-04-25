@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#0a0a0a"/>
+  <rect x="40" y="40" width="432" height="432" rx="80" fill="#111"/>
+  <!-- Vinyl record -->
+  <circle cx="256" cy="256" r="160" fill="#1a1a1a"/>
+  <circle cx="256" cy="256" r="120" fill="#0a0a0a"/>
+  <circle cx="256" cy="256" r="80" fill="#1a1a1a"/>
+  <circle cx="256" cy="256" r="24" fill="#0a0a0a"/>
+  <!-- Accent dot -->
+  <circle cx="256" cy="156" r="12" fill="#c8f55a"/>
+  <!-- Text -->
+  <text x="256" y="430" font-family="monospace" font-weight="900" font-size="48" fill="#c8f55a" text-anchor="middle" letter-spacing="4">UNREL</text>
+</svg>
