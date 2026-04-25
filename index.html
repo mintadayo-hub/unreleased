@@ -361,17 +361,17 @@ input[type="file"] { display:none; }
     <div class="modal-title" id="modalTitle">// NEW ALBUM</div>
 
     <!-- Image upload -->
+    <input type="file" accept="image/*" id="imgFileInput" style="display:none" onchange="onImageSelect(event)" />
     <div class="form-group">
       <label class="form-label">アルバムアート / スクショ</label>
-      <div id="dropZone" class="drop-zone">
-        <input type="file" accept="image/*" onchange="onImageSelect(event)" id="imgFileInput" />
+      <div id="dropZone" class="drop-zone" onclick="document.getElementById('imgFileInput').click()" style="cursor:pointer">
         <div class="drop-zone-icon">📸</div>
         <div class="drop-zone-text">タップして画像を選択</div>
         <div class="drop-zone-sub">スクショをそのまま貼れます</div>
       </div>
-      <div id="previewWrap" style="display:none" class="preview-img-wrap">
+      <div id="previewWrap" style="display:none" class="preview-img-wrap" onclick="document.getElementById('imgFileInput').click()">
         <img id="previewImg" class="preview-img" />
-        <div class="preview-change">タップして変更<input type="file" accept="image/*" onchange="onImageSelect(event)" /></div>
+        <div class="preview-change">タップして変更</div>
       </div>
       <button class="scan-btn" id="scanBtn" onclick="scanImage()" style="display:none">
         <span>🤖</span> AIでアルバム名・アーティストを読み取る
