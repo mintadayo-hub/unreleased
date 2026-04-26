@@ -369,18 +369,14 @@ input[type="file"] { display:none; }
         <div class="drop-zone-text">タップして画像を選択</div>
         <div class="drop-zone-sub">スクショをそのまま貼れます</div>
       </div>
-      <div id="previewWrap" style="display:none" class="preview-img-wrap" onclick="document.getElementById('imgFileInput').click()">
-        <img id="previewImg" class="preview-img" />
-        <div class="preview-change">タップして変更</div>
-      </div>
-      <button class="scan-btn" id="scanBtn" onclick="scanImage()" style="display:none">
-        <span>🤖</span> AIでアルバム名・アーティストを読み取る
-      </button>
-      <div class="ai-loading" id="aiLoading" style="display:none">
-        <div class="ai-loading-dot"></div>
-        <div class="ai-loading-dot"></div>
-        <div class="ai-loading-dot"></div>
-        <div class="ai-loading-text">AIが画像を解析中...</div>
+      <div id="cropWrap" style="display:none">
+        <canvas id="cropCanvas" style="width:100%;aspect-ratio:1;border-radius:12px;display:block;touch-action:none;cursor:grab;background:#111;"></canvas>
+        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <button onclick="zoomCrop(-1)" style="flex:1;background:var(--bg4);border:1.5px solid var(--border2);border-radius:10px;padding:10px;color:var(--text);font-size:1.2rem;cursor:pointer;">－</button>
+          <span style="font-size:0.68rem;color:var(--text3);text-align:center;flex:2">ドラッグで位置調整<br>±でズーム</span>
+          <button onclick="zoomCrop(1)" style="flex:1;background:var(--bg4);border:1.5px solid var(--border2);border-radius:10px;padding:10px;color:var(--text);font-size:1.2rem;cursor:pointer;">＋</button>
+        </div>
+        <button onclick="document.getElementById('imgFileInput').click()" style="width:100%;background:transparent;border:1.5px solid var(--border2);border-radius:10px;padding:9px;color:var(--text2);font-size:0.78rem;font-weight:700;cursor:pointer;margin-top:6px;font-family:'Noto Sans JP',sans-serif;">📸 別の写真を選ぶ</button>
       </div>
     </div>
 
@@ -532,87 +528,80 @@ function setTab(t) {
   renderAll();
 }
 
-// ===== IMAGE =====
+// ===== IMAGE / CROP =====
+let cropImg = null;
+let cropOffsetX = 0, cropOffsetY = 0, cropScale = 1;
+let isDragging = false, lastX = 0, lastY = 0;
+
 function onImageSelect(e) {
   const file = e.target.files[0]; if(!file) return;
+  e.target.value = '';
   const reader = new FileReader();
   reader.onload = ev => {
-    currentImgData = ev.target.result;
-    document.getElementById('dropZone').style.display = 'none';
-    const pw = document.getElementById('previewWrap');
-    pw.style.display = 'block';
-    document.getElementById('previewImg').src = currentImgData;
-    document.getElementById('scanBtn').style.display = 'flex';
+    const img = new Image();
+    img.onload = () => {
+      cropImg = img;
+      cropOffsetX = 0; cropOffsetY = 0;
+      const canvas = document.getElementById('cropCanvas');
+      const size = canvas.offsetWidth || 300;
+      cropScale = size / Math.min(img.width, img.height);
+      renderCrop();
+      document.getElementById('dropZone').style.display = 'none';
+      document.getElementById('cropWrap').style.display = 'block';
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-// ===== AI SCAN =====
-async function scanImage() {
-  if (!currentImgData) return;
-  const btn = document.getElementById('scanBtn');
-  const loading = document.getElementById('aiLoading');
-  btn.style.display = 'none';
-  loading.style.display = 'flex';
-
-  try {
-    const base64 = currentImgData.split(',')[1];
-    const mediaType = currentImgData.split(';')[0].split(':')[1];
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: base64 }
-            },
-            {
-              type: 'text',
-              text: 'この画像からアルバム名とアーティスト名を読み取ってください。必ずJSON形式のみで返答してください。例: {"album":"FLY FALL","artist":"Fla$hBackS"} 読み取れない場合は {"album":"","artist":""} を返してください。'
-            }
-          ]
-        }]
-      })
-    });
-
-    const data = await res.json();
-    const text = data.content?.find(c=>c.type==='text')?.text || '';
-    const jsonMatch = text.match(/\{[^}]+\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
-      if (parsed.album) document.getElementById('fTitle').value = parsed.album;
-      if (parsed.artist) document.getElementById('fArtist').value = parsed.artist;
-    }
-  } catch(e) {
-    console.error(e);
-  }
-
-  loading.style.display = 'none';
-  btn.style.display = 'flex';
+function renderCrop() {
+  const canvas = document.getElementById('cropCanvas');
+  const size = canvas.offsetWidth || 300;
+  canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,size,size);
+  const w = cropImg.width * cropScale;
+  const h = cropImg.height * cropScale;
+  cropOffsetX = Math.min(0, Math.max(size - w, cropOffsetX));
+  cropOffsetY = Math.min(0, Math.max(size - h, cropOffsetY));
+  ctx.drawImage(cropImg, cropOffsetX, cropOffsetY, w, h);
+  currentImgData = canvas.toDataURL('image/jpeg', 0.72);
 }
+
+function zoomCrop(dir) {
+  if(!cropImg) return;
+  cropScale = Math.max(0.2, Math.min(6, cropScale + dir * 0.15));
+  renderCrop();
+}
+
+function setupCropDrag() {
+  const canvas = document.getElementById('cropCanvas');
+  canvas.addEventListener('touchstart', e=>{ isDragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; e.preventDefault(); },{passive:false});
+  canvas.addEventListener('touchmove', e=>{ if(!isDragging||!cropImg) return; cropOffsetX+=e.touches[0].clientX-lastX; cropOffsetY+=e.touches[0].clientY-lastY; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; renderCrop(); e.preventDefault(); },{passive:false});
+  canvas.addEventListener('touchend', ()=>isDragging=false);
+  canvas.addEventListener('mousedown', e=>{ isDragging=true; lastX=e.clientX; lastY=e.clientY; });
+  window.addEventListener('mousemove', e=>{ if(!isDragging||!cropImg) return; cropOffsetX+=e.clientX-lastX; cropOffsetY+=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY; renderCrop(); });
+  window.addEventListener('mouseup', ()=>isDragging=false);
+}
+
+
 
 // ===== MODAL =====
 function openAddModal() {
   editingId = null;
   currentImgData = null;
+  cropImg = null;
   document.getElementById('modalTitle').textContent = '// NEW ALBUM';
   document.getElementById('fTitle').value = '';
   document.getElementById('fArtist').value = '';
   document.getElementById('fYear').value = '';
   document.getElementById('fSource').value = '';
   document.getElementById('dropZone').style.display = 'block';
-  document.getElementById('previewWrap').style.display = 'none';
-  document.getElementById('scanBtn').style.display = 'none';
-  document.getElementById('aiLoading').style.display = 'none';
+  document.getElementById('cropWrap').style.display = 'none';
   document.getElementById('deleteBtn').style.display = 'none';
   setStatus('collected');
   openModal('addModal');
+  setTimeout(setupCropDrag, 100);
 }
 
 function openDetail(id) {
@@ -655,19 +644,28 @@ function openEditModal(id) {
   document.getElementById('fYear').value = a.year||'';
   document.getElementById('fSource').value = a.source||'';
   if (a.img) {
+    // load existing image into cropper
+    const img2 = new Image();
+    img2.onload = () => {
+      cropImg = img2;
+      const canvas = document.getElementById('cropCanvas');
+      const size = canvas.offsetWidth || 300;
+      cropScale = size / Math.min(img2.width, img2.height);
+      cropOffsetX = 0; cropOffsetY = 0;
+      renderCrop();
+    };
+    img2.src = a.img;
     document.getElementById('dropZone').style.display = 'none';
-    document.getElementById('previewWrap').style.display = 'block';
-    document.getElementById('previewImg').src = a.img;
-    document.getElementById('scanBtn').style.display = 'flex';
+    document.getElementById('cropWrap').style.display = 'block';
   } else {
     document.getElementById('dropZone').style.display = 'block';
-    document.getElementById('previewWrap').style.display = 'none';
-    document.getElementById('scanBtn').style.display = 'none';
+    document.getElementById('cropWrap').style.display = 'none';
+    cropImg = null;
   }
-  document.getElementById('aiLoading').style.display = 'none';
   document.getElementById('deleteBtn').style.display = 'block';
   setStatus(a.status);
   openModal('addModal');
+  setTimeout(setupCropDrag, 100);
 }
 
 function setStatus(s) {
