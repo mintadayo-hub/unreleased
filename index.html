@@ -377,6 +377,7 @@ input[type="file"] { display:none; }
           <button onclick="zoomCrop(1)" style="flex:1;background:var(--bg4);border:1.5px solid var(--border2);border-radius:10px;padding:10px;color:var(--text);font-size:1.2rem;cursor:pointer;">＋</button>
         </div>
         <button onclick="document.getElementById('imgFileInput').click()" style="width:100%;background:transparent;border:1.5px solid var(--border2);border-radius:10px;padding:9px;color:var(--text2);font-size:0.78rem;font-weight:700;cursor:pointer;margin-top:6px;font-family:'Noto Sans JP',sans-serif;">📸 別の写真を選ぶ</button>
+        <button id="ngBtn" onclick="toggleNg()" style="width:100%;background:transparent;border:1.5px solid rgba(210,30,30,0.3);border-radius:10px;padding:9px;color:#888;font-size:0.82rem;font-weight:700;cursor:pointer;margin-top:6px;font-family:'Noto Sans JP',sans-serif;transition:all 0.18s;">🚫 交換NGバッジをつける</button>
       </div>
     </div>
 
@@ -425,16 +426,22 @@ input[type="file"] { display:none; }
     <div class="modal-handle"></div>
     <div class="modal-title">// ホーム画面に追加</div>
     <div style="display:flex;flex-direction:column;gap:0">
-      ${[
-        ['1','Safariでこのページを開く','※ ChromeではなくSafariが必要です'],
-        ['2','画面下の共有ボタン（□↑）をタップ',''],
-        ['3','「ホーム画面に追加」をタップ','下にスクロールすると出てきます'],
-        ['4','「追加」をタップして完了🎉','ホーム画面にアイコンが現れます'],
-      ].map(([n,t,s])=>`
       <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)">
-        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${n}</div>
-        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">${t}</div>${s?`<div style="font-size:0.72rem;color:var(--text3);margin-top:2px">${s}</div>`:''}</div>
-      </div>`).join('')}
+        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">1</div>
+        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">Safariでこのページを開く</div><div style="font-size:0.72rem;color:var(--text3);margin-top:2px">※ ChromeではなくSafariが必要です</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)">
+        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">2</div>
+        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">画面下の共有ボタン（□↑）をタップ</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--border)">
+        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">3</div>
+        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">「ホーム画面に追加」をタップ</div><div style="font-size:0.72rem;color:var(--text3);margin-top:2px">下にスクロールすると出てきます</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 0;">
+        <div style="background:var(--accent);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:0.72rem;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">4</div>
+        <div><div style="font-size:0.88rem;font-weight:700;color:var(--text)">「追加」をタップして完了🎉</div><div style="font-size:0.72rem;color:var(--text3);margin-top:2px">ホーム画面にアイコンが現れます</div></div>
+      </div>
     </div>
     <button class="submit-btn" style="margin-top:14px" onclick="closeModal('installModal')">閉じる</button>
   </div>
@@ -496,6 +503,7 @@ function renderGrid() {
       <div class="album-art-wrap">
         ${a.img ? `<img class="album-art" src="${a.img}" />` : `<div class="album-art-placeholder">💿</div>`}
         <div class="status-dot ${a.status}">${a.status==='collected'?'💿':'⭐'}</div>
+        ${a.ng ? '<div style="position:absolute;top:6px;left:6px;background:rgba(210,30,30,0.88);color:#fff;font-size:0.58rem;font-weight:700;padding:2px 7px;border-radius:8px;">交換NG</div>' : ''}
       </div>
       <div class="album-info">
         ${a.title ? `<div class="album-title">${esc(a.title)}</div>` : ''}
@@ -532,6 +540,7 @@ function setTab(t) {
 let cropImg = null;
 let cropOffsetX = 0, cropOffsetY = 0, cropScale = 1;
 let isDragging = false, lastX = 0, lastY = 0;
+let showNgBadge = false;
 
 function onImageSelect(e) {
   const file = e.target.files[0]; if(!file) return;
@@ -541,10 +550,29 @@ function onImageSelect(e) {
     const img = new Image();
     img.onload = () => {
       cropImg = img;
-      cropOffsetX = 0; cropOffsetY = 0;
       const canvas = document.getElementById('cropCanvas');
       const size = canvas.offsetWidth || 300;
-      cropScale = size / Math.min(img.width, img.height);
+      const ratio = img.width / img.height;
+
+      // Apple Musicのスクショ判定: 縦長(9:16前後)の場合、アルバムアート部分に自動フォーカス
+      // アルバムアートは横幅の約75%、画面上部20%あたりから始まる正方形
+      if (ratio < 0.7) {
+        // 縦長スクショ: アルバムアート幅はスクショ幅の約75%、上から約13%の位置
+        const artWidth = img.width * 0.75;
+        cropScale = size / artWidth;
+        // アートの左端オフセット: (img.width - artWidth)/2
+        const artLeft = (img.width - artWidth) / 2;
+        // アートの上端オフセット: img.height * 0.13
+        const artTop = img.height * 0.13;
+        cropOffsetX = -artLeft * cropScale;
+        cropOffsetY = -artTop * cropScale;
+      } else {
+        // 正方形・横長: そのままフィット
+        cropScale = size / Math.min(img.width, img.height);
+        cropOffsetX = 0;
+        cropOffsetY = 0;
+      }
+
       renderCrop();
       document.getElementById('dropZone').style.display = 'none';
       document.getElementById('cropWrap').style.display = 'block';
@@ -552,6 +580,15 @@ function onImageSelect(e) {
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
 }
 
 function renderCrop() {
@@ -565,10 +602,59 @@ function renderCrop() {
   cropOffsetX = Math.min(0, Math.max(size - w, cropOffsetX));
   cropOffsetY = Math.min(0, Math.max(size - h, cropOffsetY));
   ctx.drawImage(cropImg, cropOffsetX, cropOffsetY, w, h);
-  currentImgData = canvas.toDataURL('image/jpeg', 0.72);
+
+  // 交換NG バッジ
+  if (showNgBadge) {
+    const badgeText = '交換NG';
+    const pad = size * 0.032;
+    const fontSize = Math.round(size * 0.072);
+    ctx.font = 'bold ' + fontSize + 'px sans-serif';
+    const tw = ctx.measureText(badgeText).width;
+    const bw = tw + pad * 2.2;
+    const bh = fontSize + pad * 1.6;
+    const bx = size - bw - size * 0.04;
+    const by = size * 0.04;
+    ctx.fillStyle = 'rgba(210, 30, 30, 0.9)';
+    roundRect(ctx, bx, by, bw, bh, bh / 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(badgeText, bx + pad, by + bh / 2);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  currentImgData = canvas.toDataURL('image/jpeg', 0.78);
 }
 
-function zoomCrop(dir) {
+function toggleNg() {
+  showNgBadge = !showNgBadge;
+  const btn = document.getElementById('ngBtn');
+  if (showNgBadge) {
+    btn.style.background = 'rgba(210,30,30,0.15)';
+    btn.style.borderColor = 'rgba(210,30,30,0.7)';
+    btn.style.color = '#ff6b6b';
+    btn.textContent = '🚫 交換NGバッジをはずす';
+  } else {
+    btn.style.background = 'transparent';
+    btn.style.borderColor = 'rgba(210,30,30,0.3)';
+    btn.style.color = '#888';
+    btn.textContent = '🚫 交換NGバッジをつける';
+  }
+  if (cropImg) renderCrop();
+}
+
+function resetNgBtn() {
+  showNgBadge = false;
+  const btn = document.getElementById('ngBtn');
+  if (btn) {
+    btn.style.background = 'transparent';
+    btn.style.borderColor = 'rgba(210,30,30,0.3)';
+    btn.style.color = '#888';
+    btn.textContent = '🚫 交換NGバッジをつける';
+  }
+}
   if(!cropImg) return;
   cropScale = Math.max(0.2, Math.min(6, cropScale + dir * 0.15));
   renderCrop();
@@ -591,6 +677,7 @@ function openAddModal() {
   editingId = null;
   currentImgData = null;
   cropImg = null;
+  resetNgBtn();
   document.getElementById('modalTitle').textContent = '// NEW ALBUM';
   document.getElementById('fTitle').value = '';
   document.getElementById('fArtist').value = '';
@@ -678,7 +765,7 @@ function saveAlbum() {
   const title = document.getElementById('fTitle').value.trim();
   const artist = document.getElementById('fArtist').value.trim();
   if (!title && !artist && !currentImgData) { alert('画像か、アルバム名・アーティスト名のどちらかを入力してください'); return; }
-  const data = { title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus, img: currentImgData };
+  const data = { title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus, img: currentImgData, ng: showNgBadge };
   if (editingId) {
     const i = albums.findIndex(a=>String(a.id)===String(editingId));
     if (i!==-1) albums[i] = { ...albums[i], ...data };
