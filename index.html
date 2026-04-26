@@ -381,12 +381,12 @@ input[type="file"] { display:none; }
     </div>
 
     <div class="form-group">
-      <label class="form-label">アルバム名 *</label>
-      <input class="form-input" id="fTitle" placeholder="例: FLY FALL" maxlength="60" />
+      <label class="form-label">アルバム名 <span style="color:var(--text3);font-weight:400">（任意）</span></label>
+      <input class="form-input" id="fTitle" placeholder="例: FLY FALL（空欄でもOK）" maxlength="60" />
     </div>
     <div class="form-group">
-      <label class="form-label">アーティスト *</label>
-      <input class="form-input" id="fArtist" placeholder="例: Fla$hBackS" list="artistDatalist" maxlength="40" />
+      <label class="form-label">アーティスト <span style="color:var(--text3);font-weight:400">（任意）</span></label>
+      <input class="form-input" id="fArtist" placeholder="例: Fla$hBackS（空欄でもOK）" list="artistDatalist" maxlength="40" />
       <datalist id="artistDatalist"></datalist>
     </div>
     <div class="form-row">
@@ -498,8 +498,8 @@ function renderGrid() {
         <div class="status-dot ${a.status}">${a.status==='collected'?'💿':'⭐'}</div>
       </div>
       <div class="album-info">
-        <div class="album-title">${esc(a.title)}</div>
-        <div class="album-artist">${esc(a.artist)}</div>
+        ${a.title ? `<div class="album-title">${esc(a.title)}</div>` : ''}
+        ${a.artist ? `<div class="album-artist">${esc(a.artist)}</div>` : ''}
         <div class="album-meta">
           <span class="meta-tag ${a.status==='collected'?'tag-collected':'tag-wish'}">${a.status==='collected'?'所持':'WISH'}</span>
           ${a.year?`<span class="meta-tag tag-year">${esc(a.year)}</span>`:''}
@@ -608,8 +608,8 @@ function openDetail(id) {
   const a = albums.find(x=>String(x.id)===String(id)); if(!a) return;
   document.getElementById('detailContent').innerHTML = `
     ${a.img ? `<img class="detail-art" src="${a.img}" />` : `<div class="detail-art-placeholder">💿</div>`}
-    <div class="detail-title">${esc(a.title)}</div>
-    <div class="detail-artist">${esc(a.artist)}</div>
+    ${a.title ? `<div class="detail-title">${esc(a.title)}</div>` : ''}
+    ${a.artist ? `<div class="detail-artist">${esc(a.artist)}</div>` : ''}
     <div class="detail-tags">
       <span class="meta-tag ${a.status==='collected'?'tag-collected':'tag-wish'}">${a.status==='collected'?'💿 所持':'⭐ WISH'}</span>
       ${a.year?`<span class="meta-tag tag-year">${esc(a.year)}</span>`:''}
@@ -677,7 +677,7 @@ function setStatus(s) {
 function saveAlbum() {
   const title = document.getElementById('fTitle').value.trim();
   const artist = document.getElementById('fArtist').value.trim();
-  if (!title || !artist) { alert('アルバム名とアーティスト名は必須です'); return; }
+  if (!title && !artist && !currentImgData) { alert('画像か、アルバム名・アーティスト名のどちらかを入力してください'); return; }
   const data = { title, artist, year: document.getElementById('fYear').value.trim(), source: document.getElementById('fSource').value.trim(), status: editStatus, img: currentImgData };
   if (editingId) {
     const i = albums.findIndex(a=>String(a.id)===String(editingId));
